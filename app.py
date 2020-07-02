@@ -25,6 +25,12 @@ def serialize_cupcake(cupcake):
         "image": cupcake.image,
     }
 
+@app.route("/")
+def home_page():
+    """Renders HTML template"""
+    cupcakes = Cupcake.query.all()
+    return render_template("index.html", cupcake=cupcakes)
+
 @app.route("/api/cupcakes", methods=["GET"])
 def list_cupcake():
     """Return JSON of all cupcakes"""
@@ -72,7 +78,7 @@ def update_cupcake(cupcake_id):
     cupcake.image = request.json.get('image', cupcake.image)
     db.session.commit()
 
-    return jsonify(cupcake=todo.serialize_cupcake())
+    return jsonify(cupcake=cupcake.serialize_cupcake())
 
 @app.route("/api/cupcakes/<int:cupcake_id>", methods=["DELETE"])
 def delete_cupcake(cupcake_id):
